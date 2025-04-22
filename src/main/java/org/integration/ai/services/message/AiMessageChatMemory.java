@@ -60,13 +60,13 @@ public class AiMessageChatMemory implements ChatMemory {
         if (!CollectionUtil.isEmpty(aiMessage.getMedias())) {
             mediaList = aiMessage.getMedias().stream().map(AiMessageChatMemory::toSpringAiMedia).toList();
         }
-        if (aiMessage.getType().equals(MessageType.ASSISTANT.getValue())) {
+        if (aiMessage.getType().equalsIgnoreCase(MessageType.ASSISTANT.getValue())) {
             return new AssistantMessage(aiMessage.getTextContent());
         }
-        if (aiMessage.getType().equals(MessageType.USER.getValue())) {
+        if (aiMessage.getType().equalsIgnoreCase(MessageType.USER.getValue())) {
             return new UserMessage(aiMessage.getTextContent(), mediaList);
         }
-        if (aiMessage.getType().equals(MessageType.SYSTEM.getValue())) {
+        if (aiMessage.getType().equalsIgnoreCase(MessageType.SYSTEM.getValue())) {
             return new SystemMessage(aiMessage.getTextContent());
         }
         throw new BusinessException("不支持的消息类型");

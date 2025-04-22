@@ -1,5 +1,6 @@
 package org.integration.ai.services.message;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -133,7 +134,7 @@ public class AiMessageServiceImpl extends ServiceImpl<AiMessageMapper, AiMessage
         AiMessage aiMessage = new AiMessage();
         aiMessage.setTextContent(input.getTextContent());
         aiMessage.setAiSessionId(input.getSessionId());
-        aiMessage.setType(input.getMessageType().getValue());
+        aiMessage.setType(input.getMessageType().getType());
 
         // AiMessageInput转成Message
         Message message = AiMessageChatMemory.toSpringAiMessage(aiMessage);
@@ -161,7 +162,10 @@ public class AiMessageServiceImpl extends ServiceImpl<AiMessageMapper, AiMessage
         AiMessage aiMessage = new AiMessage();
         aiMessage.setCreatedTime(LocalDateTime.now());
         aiMessage.setEditedTime(LocalDateTime.now());
-        aiMessage.setType(input.getMessageType().getValue());
+        aiMessage.setCreatorId(StpUtil.getLoginIdAsString());
+        aiMessage.setEditorId(StpUtil.getLoginIdAsString());
+
+        aiMessage.setType(input.getMessageType().getType());
 
         aiMessage.setAiSessionId(input.getSessionId());
         aiMessage.setTextContent(input.getTextContent());

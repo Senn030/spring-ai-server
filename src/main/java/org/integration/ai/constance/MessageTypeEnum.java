@@ -1,5 +1,6 @@
 package org.integration.ai.constance;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 /**
@@ -17,10 +18,14 @@ public enum MessageTypeEnum {
     // 工具消息
     TOOL("TOOL");
 
-    private final String value;
+    private final String type;
 
-    MessageTypeEnum(String value) {
-        this.value = value;
+    MessageTypeEnum(String type) {
+        this.type = type;
     }
 
+    @JsonValue
+    public String getType() {
+        return type;
+    }
 }

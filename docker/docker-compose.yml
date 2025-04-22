@@ -1,0 +1,80 @@
+version: '3.8'
+
+# 定义自定义网络
+networks:
+  my-spring-ai:  # 网络名称，可自定义
+    driver: bridge
+
+services:
+  redis-stack:
+    image: redis/redis-stack:latest
+    container_name: redis-stack
+    restart: always
+    ports:
+      - "6379:6379"    # 外部访问 Redis
+      - "8001:8001"    # 外部访问 RedisInsight
+    volumes:
+      - ./volumes/redis/data:/data
+    environment:
+      - REDIS_ARGS=--requirepass 123456
+    networks:
+      - my-spring-ai  # 加入自定义网络
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "123456", "ping" ]  # 发送 PING 命令
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  neo4j:
+    image: neo4j:5.26.5-community
+    container_name: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./volumes/neo4j/data:/data
+      - ./volumes/neo4j/plugins:/plugins
+    environment:
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - NEO4J_PLUGINS=["apoc"]  # 使用新变量名
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
+      - NEO4J_AUTH=neo4j/Neo4j123  # 密码至少8位
+      - NEO4J_dbms_security_auth__minimum__password__length=4  # 可选：降低密码最小长度要求（不推荐生产环境）
+    user: "7474:7474"  # 解决挂载目录权限问题
+    networks:
+      - my-spring-ai
+    healthcheck:
+      test: [ "CMD", "cypher-shell", "-u", "neo4j", "-p", "Neo4j123", "--format", "plain", "RETURN 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  mysql:
+    image: mysql:8.0.39
+    container_name: mysql
+    ports:
+      - "3306:3306"    # 外部访问 MySQL
+    volumes:
+      - ./volumes/mysql/data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    restart: unless-stopped
+    networks:
+      - my-spring-ai  # 加入自定义网络
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456" ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+
+# 数据卷声明（本地路径映射）
+volumes:
+  redis-data:
+  neo4j-data:
+  neo4j-plugins:
+  mysql-data:
