@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {
+  ElMessage,
   ElAvatar,
   ElButton,
   ElCard,
@@ -35,11 +36,17 @@ onMounted(() => {
 })
 const handleLogin = async () => {
   console.log('开始登录，提交数据:', loginForm)
-  const res = await api.userController.login({ body: loginForm })
-  console.log('登录响应完整数据:', res)
+  try {
+    const res = await api.userController.login({ body: loginForm })
+    console.log('登录响应完整数据:', res)
 
-  localStorage.setItem('token', res.tokenValue)
-  await router.replace({ path: '/' })
+    localStorage.setItem('token', res.tokenValue)
+    ElMessage.success('登录成功')
+    await router.replace({ path: '/' })
+  } catch (error) {
+    console.error('登录失败:', error)
+    ElMessage.error('登录失败，请检查账号密码')
+  }
 }
 </script>
 <template>

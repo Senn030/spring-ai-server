@@ -5,6 +5,24 @@ spring:
   application:
     name: spring-ai-server
 
+  ai:
+    dash-scope:
+      api-key: sk-7e1e2ee3fb484651b780bfebde146cb7
+      chat:
+        options:
+          model: qwen-max
+          # 多模态图片理解需要开启
+      #          multi-model: true
+      embedding:
+        options:
+          model: text-embedding-v2
+      image:
+        options:
+          model: wanx-v1
+    vectorstore:
+      redis:
+        initialize-schema: true
+
   data:
     redis:
       database: 0

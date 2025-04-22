@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2025-04-19
  * @since 0.0.1-SNAPSHOT
  */
-@MapperScan("org.integration.ai.domain.login.mapper")
+@MapperScan("org.integration.ai.domain.**.mapper")
 @SpringBootApplication
 public class ServerApplication {
     public static void main(String[] args) {

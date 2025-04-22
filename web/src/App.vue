@@ -9,7 +9,7 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
       <transition name="slide">
         <component :is="Component" />
       </transition> </router-view
-    ></el-config-provider>
+  ></el-config-provider>
 </template>
 
 <style>

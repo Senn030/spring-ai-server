@@ -1,5 +1,3 @@
-// import type { MenuDto } from '@/apis/domain/model/dto'
-
 export type EditMode = 'CREATE' | 'UPDATE'
 export interface Scope<T> {
   row: T
@@ -12,6 +10,3 @@ export interface Result<T> {
   msg: string
   result: T
 }
-// export type MenuTreeDto = {
-//   children?: MenuTreeDto[]
-// } & MenuDto['MenuRepository/SIMPLE_FETCHER']
